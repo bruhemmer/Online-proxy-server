@@ -1,12 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Proxy</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Clicker Game</title>
+    <script>
+        // Initialize variables
+        let clicks = 0;
+        let autoClicks = 0;
+        let clickMultiplier = 1;
+        let autoClickMultiplier = 1;
+
+        // Load saved progress from local storage
+        function loadProgress() {
+            const savedClicks = localStorage.getItem("clicks");
+            const savedAutoClicks = localStorage.getItem("autoClicks");
+            if (savedClicks) clicks = parseInt(savedClicks);
+            if (savedAutoClicks) autoClicks = parseInt(savedAutoClicks);
+        }
+
+        // Save progress to local storage
+        function saveProgress() {
+            localStorage.setItem("clicks", clicks);
+            localStorage.setItem("autoClicks", autoClicks);
+        }
+
+        // Update display
+        function updateDisplay() {
+            document.getElementById("clicks").textContent = `Clicks: ${clicks}`;
+            document.getElementById("autoClicks").textContent = `Auto Clicks: ${autoClicks}`;
+        }
+
+        // Handle manual clicks
+        function click() {
+            clicks += clickMultiplier;
+            updateDisplay();
+            saveProgress();
+        }
+
+        // Handle auto clicks
+        function autoClick() {
+            clicks += autoClickMultiplier;
+            updateDisplay();
+            saveProgress();
+        }
+
+        // Buy an upgrade
+        function buyUpgrade(upgradeType) {
+            if (upgradeType === "click") {
+                if (clicks >= 10) {
+                    clicks -= 10;
+                    clickMultiplier++;
+                    updateDisplay();
+                    saveProgress();
+                }
+            } else if (upgradeType === "autoClick") {
+                if (clicks >= 20) {
+                    clicks -= 20;
+                    autoClicks++;
+                    updateDisplay();
+                    saveProgress();
+                }
+            }
+        }
+
+        // Load progress and update display on page load
+        window.onload = function () {
+            loadProgress();
+            updateDisplay();
+        };
+    </script>
 </head>
 <body>
-    <script src="proxy.js"></script>
+    <h1>Clicker Game</h1>
+    <p id="clicks">Clicks: 0</p>
+    <p id="autoClicks">Auto Clicks: 0</p>
+    <button onclick="click()">Click</button>
+    <button onclick="autoClick()">Auto Click</button>
+    <button onclick="buyUpgrade('click')">Buy Click Upgrade (Cost: 10 clicks)</button>
+    <button onclick="buyUpgrade('autoClick')">Buy Auto Click Upgrade (Cost: 20 clicks)</button>
 </body>
 </html>
+
